@@ -47,7 +47,7 @@ for name, path in sorted(PAGES.items()):
         for t in LINK.findall(s):
             if t not in PAGES:
                 (warnings if t in PLANNED else errors).append(f"{where} 連結 [[{t}]] 尚未建立")
-        if name in SKIP or s.startswith("相關：") or s.startswith("|---"):
+        if name in SKIP or s.startswith(("相關：", "- 註（wiki）")) or s.startswith("|---"):
             continue
         if i < len(lines) and lines[i].strip().startswith("|---"):
             continue  # 表格標題列
