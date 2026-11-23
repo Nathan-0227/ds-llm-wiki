@@ -6,6 +6,11 @@
 ・上傳 17 份講義，md5 比對後有 5 份重複，實際 ingest 12 份（約 540 頁）。
 ・兩層：深度 6 份（Graph 兩份＋Stack/Queue、Linked List、Trees、Basic Concepts，含概念頁、虛擬碼、複雜度）＋輕量 6 份（Arrays、Sorting、External Merge Sort、Hashing、Efficient BST、Multiway Search Trees，各一頁來源頁）。
 ・每句都標到講義頁碼，例如 [G1 p.23]，由腳本核對那一頁真的有提到；講義之間或講義內部不一致處用 ⚠ 並列（例：C5 p.21 註解寫 leftChild、程式碼寫 rightChild）。
+建 Wiki 時特別考量的事：
+・重複檔：上傳時沒注意，有 5 份重複；先用 md5 比對排除，避免同一內容被當成兩個來源。
+・範圍與時間：12 份全收，但 Graph 相關 6 份做深度、其他做輕量，之後要做別的單元簡報時再升級，wiki 會持續累積。
+・出處要能被程式檢查：所以標到「頁」而不只是「章」，腳本才能翻到那一頁去核對。
+・圖片問題：講義有些內容只在圖裡（例如範例圖的邊），文字抽不到 → 明確標「需看圖」，並另外寫腳本驗證讀圖結果。
 
 二、LLM Wiki 連結
 https://claude.ai/artifact/YJhPEsseFaV1SrGyVWcrSU
@@ -13,9 +18,11 @@ https://claude.ai/artifact/YJhPEsseFaV1SrGyVWcrSU
 
 三、教學 HTML 簡報連結
 https://claude.ai/artifact/TpzJjg5g8n45WGQ5ByW622
-主題「Graph 與 BFS/DFS」，15 頁，用 ← → 翻頁。第 7、9 頁是互動動畫，可以一步一步看 DFS 的 stack、BFS 的 queue 怎麼變；範例圖與走訪順序取自講義 G2 p.4、p.7。每一行都有講義頁碼，頁尾連到對應的 wiki 頁，最後一頁是「簡報 ↔ Wiki」對應表。
+主題「Graph 與 BFS/DFS」，15 頁，用 ← → 翻頁。
+教學結構（給會一點程式、沒學過 Graph 的人）：學習目標 → 什麼是 Graph → 怎麼存（matrix／list）→ 先備工具 stack／queue → DFS 直覺 → DFS 動畫 → BFS 直覺 → BFS 動畫 → DFS vs BFS 比較 → 執行時間 → 應用 → 讀講義要注意的地方 → 回顧小測驗 → 對應表。
+Wiki 與簡報的對應：簡報只能使用 wiki 的句子（由程式抽成「證據卡」），每一行都標講義頁碼，頁尾連到對應的 wiki 頁，第 15 頁列出每頁對應的 wiki 頁與講義頁碼。第 7、9 頁是互動動畫，可以一步一步看 DFS 的 stack、BFS 的 queue 怎麼變；範例圖與走訪順序取自講義 G2 p.4、p.7。每一行都有講義頁碼，頁尾連到對應的 wiki 頁，最後一頁是「簡報 ↔ Wiki」對應表。
 
-四、Loop / Graph 設計
+四、Loop / Graph 設計（流程圖見附圖）
 整體是 Graph（關卡事先畫好，錯在哪關退回哪關），每個 AI 節點內是小 Loop（生成→檢查→修，最多 3 輪）。
 
 【建 Wiki，每份講義跑一次】
