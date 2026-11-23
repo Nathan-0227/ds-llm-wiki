@@ -49,7 +49,7 @@ anim: dfs
 按「下一步」，看 stack 怎麼長高、變矮 [G2 p.3] {dfs-nonrecursive}
 有新鄰居就 push（往前走），沒路了就 pop（退回來）[G2 p.3] {dfs-nonrecursive}
 從 v3 出發，走的順序：v3, v2, v1, v4, v5 [G2 p.4] {dfs-nonrecursive}
-講義沒說先走哪個鄰居；這裡選編號小的，邊是看講義圖讀出的 [G2 p.3][G2 p.2] {example-graph-g}
+講義沒說先走哪個鄰居（本動畫自訂：編號小的先）；邊是看圖讀出，文字無法驗證 [G2 p.3][G2 p.2] {example-graph-g}
 
 ## BFS：飛到天上往下看
 cards: bfs
@@ -77,8 +77,8 @@ BFS：先往旁邊擴，用 queue [G1 p.89][G2 p.6] {bfs}{stack-and-queue}
 
 ## 它們跑得多快？
 cards: big-o, graph-representation, dfs
-每條線最多看兩次，每個點最多去一次 [G1 p.55] {dfs}
-所以時間是 O(n + m)：n 是點的數量、m 是線的數量 [G1 p.55] {dfs}
+DFS：每條線最多看兩次（兩個端點各一次），每個點最多去一次 [G1 p.55] {dfs}
+所以 DFS 的時間是 O(m+n) [G1 p.55] {dfs}
 O(...) 是在說：n 變大時，需要的量最多以什麼速度長（不管常數倍）[C1 p.28] {big-o}
 DFS、BFS 都是 O(n + m) [G1 p.56][G1 p.88] {big-o}
 
@@ -92,12 +92,12 @@ photo: G1 p.8
 ## BFS 的用途：最短距離與魚缸問題
 cards: bfs-applications
 photo: G1 p.97
-最短距離：BFS 第 i 層的點，離起點剛好 i 步 [G1 p.94] {bfs-applications}
+最短距離：BFS 第 i 層的點，離起點的最短距離剛好是 i [G1 p.94] {bfs-applications}
 課前練習：Samuel L. Jackson 的 Bacon number 是多少？答案是 2 [G1 p.90] {bfs-applications}
 魚缸問題：會打架的魚不能放同一缸，兩個缸放得下嗎？[G1 p.97] {bfs-applications}
 做法：BFS 一層塗 A 色、一層塗 B 色；相鄰的同色就放不下 [G1 p.103] {bfs-applications}
 
-## 講義裡的小錯誤與寫法差異
+## 講義裡的不一致與寫法差異
 cards: bfs-applications, tree-traversal, dfs-nonrecursive
 ⚠ 同一頁同時寫了 O(n+m) 和「time O(m)」[G1 p.95] {bfs-applications}
 ⚠ 非遞迴 inorder：註解寫 leftChild，程式碼卻寫 rightChild [C5 p.21] {tree-traversal}

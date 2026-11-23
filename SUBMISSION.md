@@ -35,7 +35,7 @@ https://claude.ai/artifact/TpzJjg5g8n45WGQ5ByW622
 重點：「Graph 與 BFS/DFS」，16 頁，用 ← → 翻頁，讀者是完全不會的人；用講義本身的圖片和故事（粉筆走迷宮、用飛的看世界、魚缸問題）引起興趣。
 
 ▍教學結構
-看圖（internet、航班、大腦都是 Graph）→ 點和線 → 電腦怎麼記（matrix / list）→ Stack 與 Queue → DFS：粉筆走迷宮 → DFS 動手玩 → BFS：飛到天上往下看 → BFS 動手玩 → DFS vs BFS → 跑多快 O(n+m) → 用途：裝軟體順序、最短距離與魚缸 → 講義小錯誤 → 小測驗 → 對應表
+看圖（internet、航班、大腦都是 Graph）→ 點和線 → 電腦怎麼記（matrix / list）→ Stack 與 Queue → DFS：粉筆走迷宮 → DFS 動手玩 → BFS：飛到天上往下看 → BFS 動手玩 → DFS vs BFS → 跑多快 O(n+m) → 用途：裝軟體順序、最短距離與魚缸 → 講義不一致處 → 小測驗 → 對應表
 
 ▍Wiki 與簡報的對應
 ・簡報只能使用證據卡（程式從 wiki 抽出的句子），不能自己加內容

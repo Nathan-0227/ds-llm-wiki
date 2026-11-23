@@ -28,7 +28,7 @@ cards: big-o, graph-representation, dfs
 cards: dfs-applications, graph-basics
 ## 13 BFS 的用途：最短距離與魚缸問題
 cards: bfs-applications
-## 14 講義裡的小錯誤與寫法差異
+## 14 講義裡的不一致與寫法差異
 cards: bfs-applications, tree-traversal, dfs-nonrecursive
 ## 15 小測驗
 cards: example-graph-g, stack-and-queue, big-o
