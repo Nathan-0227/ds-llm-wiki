@@ -23,6 +23,13 @@ with sync_playwright() as p:
         vis = pg.evaluate("[...document.querySelectorAll('.slide')].filter(s=>getComputedStyle(s).display!=='none').length")
         if vis != 1: errs.append(f"第 {i} 頁：同時顯示 {vis} 張投影片（v2 改版時封面疊到每一頁，原關卡沒抓到 → 新增此檢查）")
         pg.screenshot(path=str(SHOTS / f"s{i:02d}.png"))
+        if pg.locator(".slide.on .sqd").count():
+            pg.click(".slide.on [data-sq=pop]"); pg.click(".slide.on [data-sq=dequeue]"); pg.wait_for_timeout(500)
+            st = pg.evaluate("[document.querySelector('.slide.on .pile').textContent, document.querySelector('.slide.on .line').textContent]")
+            ok = st == ["AB", "BC"]
+            print(f"{'✅' if ok else '❌'} 第 {i} 頁 stack pop 後剩 {st[0]}（應為 AB，LIFO）、queue dequeue 後剩 {st[1]}（應為 BC，FIFO）")
+            if not ok: errs.append(f"第 {i} 頁 stack/queue 動畫行為錯誤")
+            pg.screenshot(path=str(SHOTS / f"s{i:02d}-sq.png"))
         kind = pg.evaluate("document.querySelector('.slide.on .animwrap')?.dataset.anim || ''")
         if kind:
             for _ in range(30): pg.click(".slide.on [data-do=next]")

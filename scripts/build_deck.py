@@ -87,7 +87,11 @@ VISUAL["graph-example"] = graph_svg(E16, P16) + '<p class="cap">G1 p.16 的例�
 mat = "".join("<tr><th>%s</th>%s</tr>" % (i, "".join(f"<td class={'one' if (str(i),str(j)) in E16 or (str(j),str(i)) in E16 else 'zero'}>{1 if (str(i),str(j)) in E16 or (str(j),str(i)) in E16 else 0}</td>" for j in range(1,5))) for i in range(1,5))
 lst = "".join(f"<div class='row'><b>{v}</b>" + "".join(f"<span>{u}</span>" for u in sorted([b for a,b in E16 if a==v]+[a for a,b in E16 if b==v])) + "</div>" for v in "1234")
 VISUAL["representation"] = f'<div class="rep"><div><h4>Adjacency matrix</h4><table class="mat"><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th></tr>{mat}</table></div><div><h4>Adjacency list</h4><div class="lst">{lst}</div></div></div><p class="cap">由 G1 p.16 的邊集合產生</p>'
-VISUAL["stack-queue"] = '<div class="sq"><div><h4>Stack · LIFO</h4><div class="stack"><span>C</span><span>B</span><span>A</span></div><p>push／pop 都在頂端</p></div><div><h4>Queue · FIFO</h4><div class="queue"><em>front</em><span>A</span><span>B</span><span>C</span><em>rear</em></div><p>rear 進、front 出</p></div></div>'
+VISUAL["stack-queue"] = ('<div class="sqd">'
+  '<div class="box s"><h4>Stack · LIFO</h4><div class="lane"><div class="pile" aria-live="polite"></div><span class="lab">↑ top：push、pop 都在這裡</span></div>'
+  '<div class="ctl"><button data-sq="push">push</button><button data-sq="pop">pop</button></div><p class="msg">按 push 放進去，按 pop 拿出來</p></div>'
+  '<div class="box q"><h4>Queue · FIFO</h4><div class="lane"><span class="lab">front ← 出</span><div class="line" aria-live="polite"></div><span class="lab">← 進 rear</span></div>'
+  '<div class="ctl"><button data-sq="enqueue">enqueue</button><button data-sq="dequeue">dequeue</button></div><p class="msg">按 enqueue 排到後面，按 dequeue 從前面出來</p></div></div>')
 VISUAL["compare-table"] = '<div class="cmp"><div class="dfs"><h4>DFS</h4><p>stack</p><p>往深處</p></div><div class="bfs"><h4>BFS</h4><p>queue</p><p>往廣處</p></div></div>'
 
 def mapping_table():
@@ -124,12 +128,18 @@ for i, s in enumerate(slides, 1):
         body, chips, _ = render_line(l)
         if l.startswith("quiz-answer:"):
             quiz[-1] += f'<button class="reveal" aria-expanded="false">看答案</button><span class="ans" hidden>{esc(body[12:].strip())} {chips}</span></li>'
-        elif l.startswith("Q"):
+        elif re.match(r"Q\d", l):
             quiz.append(f"<li><b>{body}</b>")
         else:
             cls = " class=warn" if body.startswith("⚠") else ""
             items.append(f"<li{cls}>{body} {chips}</li>")
     content = ""
+    # 檢查：逐頁稿每一行都要以「重點」或「測驗」正確出現（v3 發現 Queue 被當成測驗題後加入）
+    n_text = len([l for l in s["lines"] if not l.startswith(("quiz-answer:",)) and not re.match(r"Q\d", l)])
+    if kind not in ("cover", "wide") and n_text != len(items):
+        sys.exit(f"❌ 第 {i} 頁：逐頁稿 {n_text} 行，渲染出 {len(items)} 個重點")
+    if any(not l.startswith("quiz-answer:") and not re.match(r"Q\d", l) and l.startswith("Q") for l in s["lines"]) and kind != "cover":
+        pass
     if kind == "cover":
         content = f'<div class="cover"><div class="ctext"><div class="lines"><i></i><i></i><i></i></div><h1>{esc(s["title"])}</h1>' + "".join(f"<p>{esc(l)}</p>" for l in s["lines"]) + f'<p class="hint">按 → 或點右下角開始　·　Wiki：<a href="{WIKI}" target="_blank" rel="noopener">資料結構 LLM Wiki</a></p></div><div class="cart">{graph_svg(EDGES, POS, "g hero")}</div></div>'
     elif kind == "anim":

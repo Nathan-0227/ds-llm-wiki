@@ -74,6 +74,17 @@ svg.hero{width:100%;height:auto}svg.hero .n1 circle{fill:var(--red);stroke:var(-
 .ph.n1 figure{transform:rotate(1.2deg)}
 .body.grid4{grid-template-columns:1fr;gap:14px}.body.grid4 .ph{grid-template-columns:repeat(4,1fr);order:-1}.body.grid4 .ph figure:nth-child(odd){transform:rotate(-1.5deg)}.body.grid4 .ph figure:nth-child(even){transform:rotate(1.5deg)}
 .slide.photo .body.two{grid-template-columns:1.1fr 1fr}
+.sqd{display:grid;gap:18px}.sqd .box{padding:14px 16px;border:3px solid var(--line);border-radius:14px}
+.sqd .s{border-color:var(--red)}.sqd .q{border-color:var(--blue)}
+.sqd .lane{display:flex;align-items:center;gap:10px;min-height:150px}.sqd .q .lane{min-height:64px}
+.pile{display:flex;flex-direction:column-reverse;justify-content:flex-start;gap:4px;width:90px;min-height:150px;padding:6px;border:3px solid var(--ink);border-top:0;border-radius:0 0 10px 10px}
+.line{display:flex;gap:6px;flex:1;min-height:56px;padding:6px;border:3px solid var(--ink);border-left:0;border-right:0}
+.pile b,.line b{font:800 22px Figtree;color:#fff;text-align:center;border-radius:6px;padding:6px 0;animation:pop-in .35s ease}
+.pile b{background:var(--red)}.line b{background:var(--blue);width:52px}
+.pile b.out,.line b.out{animation:pop-out .35s ease forwards}
+.sqd .lab{font-size:15px;color:var(--mute);font-weight:700}.sqd .msg{font-size:15px;margin:6px 0 0;color:var(--mute)}.sqd .ctl{margin-top:6px}
+@keyframes pop-in{from{transform:translateY(-14px);opacity:0}}@keyframes pop-out{to{transform:translateX(-30px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pile b,.line b{animation:none}}
 </style></head><body>
 <div id="stage">
 <!--SLIDES-->
@@ -91,6 +102,14 @@ addEventListener('hashchange',()=>{const m=location.hash.match(/^#s(\d+)$/);if(m
 addEventListener('keydown',e=>{if(e.target.closest('button,summary'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}});
 document.getElementById('nx').onclick=()=>go(cur+1);document.getElementById('pv').onclick=()=>go(cur-1);
 for(const b of document.querySelectorAll('.reveal'))b.onclick=()=>{const a=b.nextElementSibling;a.hidden=!a.hidden;b.setAttribute('aria-expanded',String(!a.hidden));b.textContent=a.hidden?'看答案':'收起'};
+for(const d of document.querySelectorAll('.sqd')){
+  const pile=d.querySelector('.pile'),line=d.querySelector('.line'),ms=d.querySelectorAll('.msg');let n=0;const L='ABCDEF';
+  const add=(el,k)=>{if(el.children.length>=5){k.textContent='滿了（示範最多 5 個）';return}const b=document.createElement('b');b.textContent=L[n++%6];el.appendChild(b);k.textContent=`放進 ${b.textContent}`};
+  const take=(el,k,first)=>{const live=[...el.children].filter(x=>!x.classList.contains('out'));const b=first?live[0]:live[live.length-1];if(!b){k.textContent='空的，沒東西可拿';return}b.classList.add('out');k.textContent=`拿出 ${b.textContent}（${first?'最早進來的':'最後放進去的'}）`;setTimeout(()=>b.remove(),350)};
+  d.querySelector('[data-sq=push]').onclick=()=>add(pile,ms[0]);d.querySelector('[data-sq=pop]').onclick=()=>take(pile,ms[0],false);
+  d.querySelector('[data-sq=enqueue]').onclick=()=>add(line,ms[1]);d.querySelector('[data-sq=dequeue]').onclick=()=>take(line,ms[1],true);
+  for(const x of 'ABC'){add(pile,ms[0]);}n=0;for(const x of 'ABC'){add(line,ms[1]);}n=3;ms[0].textContent='按 push 放進去，按 pop 拿出來';ms[1].textContent='按 enqueue 排到後面，按 dequeue 從前面出來';
+}
 for(const w of document.querySelectorAll('.animwrap')){
   const steps=STEPS[w.dataset.anim];let i=0,timer=null;
   const svg=w.querySelector('svg'),act=w.querySelector('.act'),ds=w.querySelector('.ds .cells'),seen=w.querySelector('.seen .cells'),play=w.querySelector('[data-do=play]');
