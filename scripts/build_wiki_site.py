@@ -22,8 +22,10 @@ pages += [
     page("interview", "需求訪談紀錄（先討論）", ROOT / "00-需求訪談紀錄.md", "過程紀錄"),
     page("agents", "AGENTS.md 員工手冊", ROOT / "AGENTS.md", "過程紀錄"),
     page("log", "wiki/log.md", ROOT / "wiki/log.md", "過程紀錄"),
+    page("workflow", "Loop / Graph 設計", ROOT / "WORKFLOW.md", "過程紀錄"),
+    page("reflection", "執行紀錄與反思", ROOT / "REFLECTION.md", "過程紀錄"),
 ]
-for i, p in enumerate(sorted((ROOT / "checks").glob("*.md")), 1):
+for i, p in enumerate(sorted(list((ROOT / "checks").glob("*.md")) + list((ROOT / "checks").glob("*.txt"))), 1):
     pages.append(page(f"check-{i}", p.stem, p, "過程紀錄"))
 
 ids = {p["id"] for p in pages}
