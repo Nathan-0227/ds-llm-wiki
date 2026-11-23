@@ -1,0 +1,6 @@
+檢查 20 頁 wiki、12 份講義（共 543 頁）
+❌ 4 個問題
+wiki/sources/C3.md:16 英文術語 ['graph'] 都不在所標頁
+wiki/sources/C5.md:16 英文術語 ['graph'] 都不在所標頁
+wiki/concepts/big-o.md:11 英文術語 ['adjacency', 'matrix', 'adjacency', 'list'] 都不在所標頁
+wiki/concepts/stack-and-queue.md:21 數字 8 不在所標頁 ['C3 p.30']
