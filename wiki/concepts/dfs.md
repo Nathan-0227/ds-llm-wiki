@@ -3,6 +3,7 @@
 ## 直覺
 - 講義用「拿粉筆和一條線探索迷宮」說明 DFS [G1 p.26]。
 - 每個地點有三種狀態：還沒去過（Not been there yet）、去過但出口還沒探完、去過且出口都探完 [G1 p.26]。
+- 講義用 16 張投影片一步一步示範這個迷宮怎麼被探索（explored）[G1 p.26-41]。
 - 叫 depth-first 是因為「先盡量往深處走」（go as deep as we can），過程中隱含地建出一棵 DFS tree [G1 p.54]。
 
 ## 遞迴版虛擬碼（有 start/finish time）
