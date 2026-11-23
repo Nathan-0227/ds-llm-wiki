@@ -26,8 +26,8 @@ DFS(w, currentTime):
 
 ## 性質
 - DFS 會找到從起點出發能到達的所有 nodes；在無向圖中這叫 connected component [G1 p.52]。
-- 要探索整張圖（explore the whole graph），講義的做法是重複做（Do it repeatedly），每次從還沒走到的地方開始 [G1 p.53]。
-- DFS 在 directed graph 上也能用，只沿著邊的方向走 [G1 p.57]。
+- 要探索整張圖（explore the whole graph），講義的做法是重複做（Do it repeatedly）[G1 p.53]。
+- DFS 在 directed graph 上也能用；講義例子是只走到 C、不走到 B [G1 p.57]。
 
 ## 執行時間
 - 每條 edge 最多看兩次（兩個端點各一次），每個 vertex 最多拜訪一次，所以是 O(m+n) [G1 p.55]。

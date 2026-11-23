@@ -1,12 +1,12 @@
 # 圖的表示法：Adjacency Matrix 與 Adjacency List
 
 ## Option 1：Adjacency matrix（相鄰矩陣）
-- 用 n×n 的 0/1 矩陣表示，第 i 列第 j 行是 1 代表 i 和 j 之間有邊 [G1 p.18]。
+- 用 0/1 矩陣表示，列與行都是 vertices 1–4；對照 [G1 p.16] 的邊集合，1 出現在有邊的位置 [G1 p.16][G1 p.18]。
 - 有向圖時列代表 Source、行代表 Destination [G1 p.20]。
 
 ## Option 2：Adjacency list（相鄰串列）
 - 每個 vertex 存一串 neighbors；例如 4 的 neighbors 是 2 和 3 [G1 p.21]。
-- 串列的實作基礎是 linked list：每個 node 存資料與指向下一個 node 的 link [C4 p.2-6]。
+- 講義計算 DFS 執行時間時，假設圖用 linked-list format 儲存 [G1 p.56]；linked list 本身見 C4 [C4 p.2]。
 
 ## 兩種都支援的基本操作
 - Edge Membership：邊 e 是否在 E 裡？Neighbor Query：vertex v 的 neighbors 是誰？[G1 p.22]
