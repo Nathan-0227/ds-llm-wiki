@@ -1,0 +1,17 @@
+⚠ 待建：wiki/sources/G1.md:20 連結 [[G2]] 尚未建立
+⚠ 待建：wiki/concepts/bfs.md:28 連結 [[bfs-queue]] 尚未建立
+⚠ 待建：wiki/concepts/bfs.md:30 連結 [[stack-and-queue]] 尚未建立
+⚠ 待建：wiki/concepts/dfs.md:36 連結 [[dfs-nonrecursive]] 尚未建立
+⚠ 待建：wiki/concepts/dfs.md:38 連結 [[stack-and-queue]] 尚未建立
+⚠ 待建：wiki/concepts/dfs-applications.md:17 連結 [[tree-traversal]] 尚未建立
+⚠ 待建：wiki/concepts/graph-basics.md:21 連結 [[tree-traversal]] 尚未建立
+⚠ 待建：wiki/concepts/graph-representation.md:25 連結 [[big-o]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[G2]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[dfs-nonrecursive]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[bfs-queue]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[stack-and-queue]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[tree-traversal]] 尚未建立
+⚠ 待建：wiki/index.md:17 連結 [[big-o]] 尚未建立
+檢查 9 頁 wiki、12 份講義（共 543 頁）
+❌ 1 個問題
+wiki/concepts/dfs.md:29 英文術語 ['DFS'] 都不在所標頁

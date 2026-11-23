@@ -1,0 +1,16 @@
+檢查 9 頁 wiki、12 份講義（共 543 頁）
+❌ 14 個問題
+wiki/sources/G1.md:15 英文術語 ['DFS'] 都不在所標頁
+wiki/sources/G1.md:20 斷掉的連結 [[G2]]
+wiki/concepts/bfs.md:28 斷掉的連結 [[bfs-queue]]
+wiki/concepts/bfs.md:30 斷掉的連結 [[stack-and-queue]]
+wiki/concepts/bfs-applications.md:9 數字 95 不在所標頁 ['G1 p.95', 'G1 p.88']
+wiki/concepts/dfs.md:4 英文術語 ['DFS'] 都不在所標頁
+wiki/concepts/dfs.md:29 英文術語 ['DFS'] 都不在所標頁
+wiki/concepts/dfs.md:36 斷掉的連結 [[dfs-nonrecursive]]
+wiki/concepts/dfs.md:36 數字 1 不在所標頁 ['G1 p.51', 'G2 p.3']
+wiki/concepts/dfs.md:38 斷掉的連結 [[stack-and-queue]]
+wiki/concepts/dfs-applications.md:17 斷掉的連結 [[tree-traversal]]
+wiki/concepts/graph-basics.md:21 斷掉的連結 [[tree-traversal]]
+wiki/concepts/graph-representation.md:23 英文術語 ['adjacency', 'list'] 都不在所標頁
+wiki/concepts/graph-representation.md:25 斷掉的連結 [[big-o]]
