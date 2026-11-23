@@ -33,15 +33,15 @@
 ━━━━━━━━━━━━━━━━━━━━
 【2】LLM Wiki 連結
 ━━━━━━━━━━━━━━━━━━━━
-https://jiaxin825.github.io/ds-llm-wiki/wiki.html
+https://nathan-0227.github.io/ds-llm-wiki/wiki.html
 ・左側：概念頁 12、來源頁 12（公開版不放講義全文，避免公開課程教材）
 ・過程紀錄：需求訪談（含事後確認訪談）、AGENTS.md、log、Loop/Graph 設計、反思、13 份檢查紀錄
-GitHub（完整 git 紀錄與檢查腳本）：https://github.com/Jiaxin825/ds-llm-wiki
+GitHub（完整 git 紀錄與檢查腳本）：https://github.com/Nathan-0227/ds-llm-wiki
 
 ━━━━━━━━━━━━━━━━━━━━
 【3】教學 HTML 簡報連結
 ━━━━━━━━━━━━━━━━━━━━
-https://jiaxin825.github.io/ds-llm-wiki/deck.html
+https://nathan-0227.github.io/ds-llm-wiki/deck.html
 重點：「Graph 與 BFS/DFS」，16 頁，用 ← → 翻頁；讀者是完全不會的人，用講義本身的圖片和故事（粉筆走迷宮、用飛的看世界、魚缸問題）引起興趣。
 ▍教學結構
 看圖（internet、航班、大腦都是 Graph）→ 點和線 → 電腦怎麼記（matrix／list）→ Stack 與 Queue（可操作）→ DFS：粉筆走迷宮 → DFS 動手玩 → BFS：飛到天上往下看 → BFS 動手玩 → DFS vs BFS → 跑多快 O(n+m) → 用途：裝軟體順序、最短距離與魚缸 → 講義不一致處 → 小測驗 → 對應表

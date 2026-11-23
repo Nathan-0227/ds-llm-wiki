@@ -4,9 +4,9 @@ TAICA 生成式AI：文字與圖像生成的原理與實務（115-1）第十週�
 
 依 [Karpathy 的 LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) 做法，把 CSE 215 資料結構講義（12 份）整理成知識庫，再用 Graph 流程產生教學 HTML 簡報。
 
-- **首頁**：https://jiaxin825.github.io/ds-llm-wiki/
-- **教學簡報**：https://jiaxin825.github.io/ds-llm-wiki/deck.html
-- **Wiki 網頁版**：https://jiaxin825.github.io/ds-llm-wiki/wiki.html（公開版不含講義全文）
+- **首頁**：https://nathan-0227.github.io/ds-llm-wiki/
+- **教學簡報**：https://nathan-0227.github.io/ds-llm-wiki/deck.html
+- **Wiki 網頁版**：https://nathan-0227.github.io/ds-llm-wiki/wiki.html（公開版不含講義全文）
 
 網頁由 `docs/` 資料夾提供（GitHub Pages：main 分支 /docs）。
 
