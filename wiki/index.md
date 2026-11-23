@@ -24,3 +24,14 @@
 - [[C5]] Ch5 Trees（深度）
 - [[C1]] Ch1 Basic Concepts（深度）
 
+
+## 來源頁（輕量層：只有來源頁，之後可升級為深度）
+- [[C2]] Ch2 Arrays
+- [[C7]] Ch7 Sorting
+- [[C7E]] Ch7 External Merge Sort
+- [[C8]] Ch8 Hashing
+- [[C10]] Ch10 Efficient Binary Search Trees
+- [[C11]] Ch11 Multiway Search Trees
+
+## 統計
+- 講義：12 份（17 份上傳，5 份為重複檔已排除）；深度 6 份、輕量 6 份

@@ -12,3 +12,6 @@
 - 新增 sources/C3、C4、C5、C1；concepts：stack-and-queue、tree-traversal、big-o
 - ⚠ 記錄：C5 p.21 註解（leftChild）與程式碼（rightChild）不一致
 - lint 抓到 4 句：2 句來源頁的「與 graph 相關」該頁沒提 graph、1 句引用圖片內容、1 句「8 個方向」是 AI 自己數的 → 改寫
+
+## [2026-11-23 21:20] ingest（輕量）| C2、C7、C7E、C8、C10、C11
+- 每份一頁來源頁：章節大綱（依各頁標題）＋關鍵定義／複雜度，逐句標頁碼
