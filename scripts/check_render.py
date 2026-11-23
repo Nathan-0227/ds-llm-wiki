@@ -20,6 +20,8 @@ with sync_playwright() as p:
               const r=el.getBoundingClientRect(); if (r.height && r.bottom>lim+1) out.push(el.tagName+':'+(el.textContent||'').trim().slice(0,20)); }
             return out; }""")
         if bad: errs.append(f"第 {i} 頁內容超出／壓到 footer：{bad[:3]}")
+        vis = pg.evaluate("[...document.querySelectorAll('.slide')].filter(s=>getComputedStyle(s).display!=='none').length")
+        if vis != 1: errs.append(f"第 {i} 頁：同時顯示 {vis} 張投影片（v2 改版時封面疊到每一頁，原關卡沒抓到 → 新增此檢查）")
         pg.screenshot(path=str(SHOTS / f"s{i:02d}.png"))
         kind = pg.evaluate("document.querySelector('.slide.on .animwrap')?.dataset.anim || ''")
         if kind:

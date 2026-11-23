@@ -13,11 +13,12 @@ TAG = re.compile(r"\{([a-z\-]+)\}")
 slides, cur = [], None
 for line in (ROOT / "topic-graph/drafts/slides.md").read_text(encoding="utf-8").splitlines():
     if line.startswith("## "):
-        cur = {"title": line[3:].strip(), "cards": [], "lines": [], "visual": None, "anim": None}; slides.append(cur)
+        cur = {"title": line[3:].strip(), "cards": [], "lines": [], "visual": None, "anim": None, "photo": []}; slides.append(cur)
     elif cur is None: continue
     elif line.startswith("cards:"): cur["cards"] = [c.strip() for c in line[6:].split(",") if c.strip()]
     elif line.startswith("visual:"): cur["visual"] = line[7:].strip()
     elif line.startswith("anim:"): cur["anim"] = line[5:].strip()
+    elif line.startswith("photo:"): cur["photo"] = [x.strip() for x in line[6:].split(",")]
     elif line.strip(): cur["lines"].append(line.strip())
 
 def esc(s): return html.escape(s, quote=False)
@@ -98,10 +99,26 @@ def mapping_table():
         rows.append(f"<tr><td>{i}</td><td>{esc(s['title'])}</td><td>{links}</td><td>{'、'.join(cites)}</td></tr>")
     return f'<div class="map"><table><tr><th>頁</th><th>投影片</th><th>Wiki 頁</th><th>講義頁碼</th></tr>{"".join(rows)}</table></div>'
 
+import base64
+def photo_html(refs):
+    figs = []
+    for r in refs:
+        sid, pg = r.split(" p.")
+        f = ROOT / f"topic-graph/img/{sid}-p{pg}.jpg"
+        b64 = base64.b64encode(f.read_bytes()).decode()
+        figs.append(f'<figure><img src="data:image/jpeg;base64,{b64}" alt="講義 {r} 的投影片"><figcaption>講義 {r}</figcaption></figure>')
+    return f'<div class="ph n{len(refs)}">{"".join(figs)}</div>'
+
+def theme(title):
+    if "BFS" in title and "DFS" in title: return "both"
+    if "DFS" in title: return "dfs"
+    if "BFS" in title: return "bfs"
+    return ""
+
 # ---------- 組頁 ----------
 out = []
 for i, s in enumerate(slides, 1):
-    kind = "cover" if i == 1 else ("anim" if s["anim"] else ("wide" if s["visual"] == "mapping-table" else ("vis" if s["visual"] else "text")))
+    kind = "cover" if i == 1 else ("anim" if s["anim"] else ("wide" if s["visual"] == "mapping-table" else ("vis" if (s["visual"] or s["photo"]) else "text")))
     items, quiz = [], []
     for l in s["lines"]:
         body, chips, _ = render_line(l)
@@ -114,7 +131,7 @@ for i, s in enumerate(slides, 1):
             items.append(f"<li{cls}>{body} {chips}</li>")
     content = ""
     if kind == "cover":
-        content = f'<div class="cover"><div class="lines"><i></i><i></i><i></i></div><h1>{esc(s["title"])}</h1>' + "".join(f"<p>{esc(l)}</p>" for l in s["lines"]) + f'<p class="hint">按 → 或點右下角開始；Wiki：<a href="{WIKI}" target="_blank" rel="noopener">資料結構 LLM Wiki</a></p></div>'
+        content = f'<div class="cover"><div class="ctext"><div class="lines"><i></i><i></i><i></i></div><h1>{esc(s["title"])}</h1>' + "".join(f"<p>{esc(l)}</p>" for l in s["lines"]) + f'<p class="hint">按 → 或點右下角開始　·　Wiki：<a href="{WIKI}" target="_blank" rel="noopener">資料結構 LLM Wiki</a></p></div><div class="cart">{graph_svg(EDGES, POS, "g hero")}</div></div>'
     elif kind == "anim":
         a = s["anim"]
         content = f'''<h2>{esc(s["title"])}</h2><div class="animwrap" data-anim="{a}">
@@ -124,12 +141,13 @@ for i, s in enumerate(slides, 1):
     elif kind == "wide":
         content = f"<h2>{esc(s['title'])}</h2>" + mapping_table()
     else:
-        vis = f'<div class="vis">{VISUAL[s["visual"]]}</div>' if s["visual"] else ""
+        vis = f'<div class="vis">{VISUAL[s["visual"]]}</div>' if s["visual"] else (photo_html(s["photo"]) if s["photo"] else "")
         qz = f'<ol class="quiz">{"".join(quiz)}</ol>' if quiz else ""
-        content = f'<h2>{esc(s["title"])}</h2><div class="body {"two" if vis else ""}"><div><ul class="pts">{"".join(items)}</ul>{qz}</div>{vis}</div>'
+        two = "grid4" if len(s["photo"]) > 1 else ("two" if vis else "")
+        content = f'<h2>{esc(s["title"])}</h2><div class="body {two}"><div><ul class="pts">{"".join(items)}</ul>{qz}</div>{vis}</div>'
     foot = "、".join(f'<a href="{WIKI}#{c}" target="_blank" rel="noopener">{c}</a>' for c in s["cards"])
     footer = f'<footer><span>Wiki：{foot}</span><span>{i} / {len(slides)}</span></footer>' if s["cards"] else f'<footer><span></span><span>{i} / {len(slides)}</span></footer>'
-    out.append(f'<section class="slide {kind}" id="s{i}" aria-label="第 {i} 頁">{content}{footer}</section>')
+    out.append(f'<section class="slide {kind} {theme(s["title"])} {"photo" if s["photo"] else ""}" id="s{i}" aria-label="第 {i} 頁">{content}{footer}</section>')
 
 tpl = (ROOT / "scripts/deck_template.html").read_text(encoding="utf-8")
 page = tpl.replace("<!--SLIDES-->", "\n".join(out)).replace("/*ANIM*/{}", json.dumps({k: v["steps"] for k, v in ANIM.items()}, ensure_ascii=False))

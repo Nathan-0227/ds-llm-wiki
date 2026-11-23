@@ -32,15 +32,16 @@ https://claude.ai/artifact/YJhPEsseFaV1SrGyVWcrSU
 【3】教學 HTML 簡報連結
 ━━━━━━━━━━━━━━━━━━━━
 https://claude.ai/artifact/TpzJjg5g8n45WGQ5ByW622
-重點：「Graph 與 BFS/DFS」，15 頁，用 ← → 翻頁，讀者設定為會一點程式、沒學過 Graph 的人。
+重點：「Graph 與 BFS/DFS」，16 頁，用 ← → 翻頁，讀者是完全不會的人；用講義本身的圖片和故事（粉筆走迷宮、用飛的看世界、魚缸問題）引起興趣。
 
 ▍教學結構
-學習目標 → Graph 定義 → adjacency matrix / list → Stack 與 Queue → DFS 直覺 → DFS 動畫 → BFS 直覺 → BFS 動畫 → DFS vs BFS → 執行時間 O(n+m) → 應用（topological sort、shortest path、bipartite）→ 講義不一致處 → 回顧小測驗 → 對應表
+看圖（internet、航班、大腦都是 Graph）→ 點和線 → 電腦怎麼記（matrix / list）→ Stack 與 Queue → DFS：粉筆走迷宮 → DFS 動手玩 → BFS：飛到天上往下看 → BFS 動手玩 → DFS vs BFS → 跑多快 O(n+m) → 用途：裝軟體順序、最短距離與魚缸 → 講義小錯誤 → 小測驗 → 對應表
 
 ▍Wiki 與簡報的對應
 ・簡報只能使用證據卡（程式從 wiki 抽出的句子），不能自己加內容
 ・每一行都標講義頁碼，頁尾連到對應的 wiki 頁
-・第 15 頁：簡報 ↔ Wiki 頁 ↔ 講義頁碼 對應表
+・第 16 頁：簡報 ↔ Wiki 頁 ↔ 講義頁碼 對應表
+・圖片只用講義本身的投影片截圖（標頁碼），且頁碼必須在該頁證據卡引用的範圍內；不放真人照片
 ・第 7、9 頁：互動 DFS / BFS 動畫，範例圖與走訪順序取自講義 G2 p.4、p.7
 
 ━━━━━━━━━━━━━━━━━━━━
@@ -86,6 +87,11 @@ https://claude.ai/artifact/TpzJjg5g8n45WGQ5ByW622
 ・D 忠實度審查：不支持 0、部分支持 6、教學缺口 3 → 全部修正（例：「兩者時間都是 O(n+m)」，但 topological sort 的時間沒有任何來源）
 ・E 渲染關卡：❌ 第 15 頁對應表超出頁面 → ✅ 第 3 輪；動畫最後畫面與講義一致 ✅
 
+▍需求變更後第二次執行（讀者改為完全不會的人＋加講義圖片）
+・wiki lint：❌「16 張投影片」是自己數的數字；同時發現 lint 失敗時 commit 仍會成功 → 加 pre-commit hook
+・D 忠實度審查：❌ 17 行（口語化時加了「像單行道」等講義沒有的比喻和事實）→ 全部修正後重審
+・E 渲染關卡：截圖發現封面疊在每一頁，但關卡沒抓到 → 新增「同時只能顯示一張」檢查，故意放回 bug 驗證能抓到 → ✅
+
 ━━━━━━━━━━━━━━━━━━━━
 【6】反思
 ━━━━━━━━━━━━━━━━━━━━
@@ -97,11 +103,17 @@ https://claude.ai/artifact/TpzJjg5g8n45WGQ5ByW622
 ・動畫順序：在 wiki 階段就用 check_traversal.py 核對
 ・證據卡：改由程式從 wiki 抽句，AI 沒機會在這一關加料
 
+▍第二次執行的新發現
+・口語化是高風險節點：同樣內容改成給完全不會的人看，審查問題從 6 行變 17 行
+・關卡本身也會失效：lint 被 pipe 吃掉、渲染關卡漏看疊頁 → 檢查要強制執行，新關卡要先用已知 bug 測過
+
 ▍有沒有修改 workflow / graph？為什麼？
-有，改了 4 處：
+有，改了 6 處：
 ・AGENTS.md 新增：wiki 自己的推論用「註（wiki）」開頭、不准標講義頁碼；抽取文字要還原上標
 ・lint 加縮寫對照和「待建頁面」清單：誤判太多，大家會習慣性忽略警告，lint 就沒有用了
 ・簡報補上 AI 審查提出的教學缺口（DAG 前提、Li 和 queue 是同一個 BFS），內容只從證據卡拿
 ・渲染關卡改成程式量測「內容有沒有壓到 footer」，不靠人眼
+・加 git pre-commit hook：lint 沒過就拒絕 commit
+・渲染關卡新增「同時只能顯示一張投影片」；AGENTS.md 加圖片規則（只用證據卡頁碼範圍內的講義圖、不放真人照片）
 
 心得：先把「完成的定義」寫成腳本，程式管格式、AI 管意思；錯誤要在離源頭最近的地方被抓到。

@@ -82,7 +82,7 @@ def drafts():
     SRCID = re.compile(r"\b(?:G\d|C\d+E?)\b")
     for i, s in enumerate(slides, 1):
         for line in s["lines"]:
-            if line.startswith(("note:", "visual:", "quiz-answer:", "anim:")) and "{" not in line:
+            if line.startswith(("note:", "visual:", "quiz-answer:", "anim:", "photo:")) and "{" not in line:
                 continue
             tags = TAG.findall(line)
             if not tags and s["cards"]:
@@ -100,7 +100,17 @@ def drafts():
                     errs.append(f"第{i}頁 出處 {sid} 不在卡 {tags} 裡")
             if len(body) > 70:
                 errs.append(f"第{i}頁 單行 {len(body)} 字，超過 70 字：{body[:25]}…")
-        if len(s["lines"]) > 7:
+        for line in s["lines"]:
+            if line.startswith("photo:"):
+                for ref in line[6:].split(","):
+                    ok = False
+                    sid, pg = ref.strip().split(" p.")
+                    for t in s["cards"]:
+                        for c in CITE.findall(card_text.get(t, "")):
+                            cs, rng = c.split(" p."); a, _, b = rng.partition("-")
+                            if cs == sid and int(a) <= int(pg) <= int(b or a): ok = True
+                    if not ok: errs.append(f"第{i}頁 圖片 {ref.strip()} 不在本頁證據卡引用的頁碼範圍（AGENTS.md 第 11 節）")
+        if len([l for l in s["lines"] if not l.startswith("photo:")]) > 7:
             errs.append(f"第{i}頁 {len(s['lines'])} 行，超過 7 行")
     if errs: fail(errs)
     print(f"✅ 逐頁稿：{len(slides)} 頁，出處、數字、長度全過")

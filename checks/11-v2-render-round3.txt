@@ -1,0 +1,4 @@
+✅ 第 7 頁 DFS 動畫最後畫面：v3v2v1v4v5（講義 v3v2v1v4v5）
+✅ 第 9 頁 BFS 動畫最後畫面：v5v3v4v2v1（講義 v5v3v4v2v1）
+截圖 16 頁 → checks/render/
+✅ 渲染檢查全過
