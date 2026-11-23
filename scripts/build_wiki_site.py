@@ -26,7 +26,9 @@ pages += [
     page("reflection", "執行紀錄與反思", ROOT / "REFLECTION.md", "過程紀錄"),
 ]
 for i, p in enumerate(sorted(list((ROOT / "checks").glob("*.md")) + list((ROOT / "checks").glob("*.txt"))), 1):
-    pages.append(page(f"check-{i}", p.stem, p, "過程紀錄"))
+    d = page(f"check-{i}", p.name, p, "過程紀錄")
+    if p.suffix == ".txt": d["md"] = "```\n" + d["md"] + "\n```"
+    pages.append(d)
 
 ids = {p["id"] for p in pages}
 for p in pages:
