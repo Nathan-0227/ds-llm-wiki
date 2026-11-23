@@ -4,7 +4,8 @@ import sys, pathlib
 from playwright.sync_api import sync_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DECK = ROOT / "topic-graph/deck.html"; SHOTS = ROOT / "checks/render"; SHOTS.mkdir(parents=True, exist_ok=True)
+import os
+DECK = ROOT / os.environ.get("DECK", "topic-graph/deck.html"); SHOTS = ROOT / "checks/render"; SHOTS.mkdir(parents=True, exist_ok=True)
 WANT = {"dfs": "v3v2v1v4v5", "bfs": "v5v3v4v2v1"}
 errs = []
 with sync_playwright() as p:

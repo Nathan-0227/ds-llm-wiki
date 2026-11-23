@@ -5,7 +5,9 @@ import re, json, html, sys, pathlib
 from collections import deque
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-WIKI = "https://claude.ai/artifact/YJhPEsseFaV1SrGyVWcrSU"
+import os
+WIKI = os.environ.get("WIKI_URL", "https://claude.ai/artifact/YJhPEsseFaV1SrGyVWcrSU")
+OUTNAME = os.environ.get("DECK_OUT", "topic-graph/deck.html")
 CITE = re.compile(r"\[((?:G\d|C\d+E?) p\.\d+(?:-\d+)?)\]")
 TAG = re.compile(r"\{([a-z\-]+)\}")
 
@@ -25,7 +27,7 @@ def esc(s): return html.escape(s, quote=False)
 def render_line(s):
     cites = CITE.findall(s); tags = TAG.findall(s)
     body = esc(TAG.sub("", CITE.sub("", s)).strip())
-    chips = "".join(f'<a class="cite" href="{WIKI}#raw-{c.split()[0]}" target="_blank" rel="noopener">{c}</a>' for c in cites)
+    chips = "".join(f'<a class="cite" href="{WIKI}#{"raw-" if "claude.ai" in WIKI else ""}{c.split()[0]}" target="_blank" rel="noopener">{c}</a>' for c in cites)
     return body, chips, tags
 
 # ---------- 動畫步驟（與 scripts/check_traversal.py 同一演算法）----------
@@ -161,5 +163,5 @@ for i, s in enumerate(slides, 1):
 
 tpl = (ROOT / "scripts/deck_template.html").read_text(encoding="utf-8")
 page = tpl.replace("<!--SLIDES-->", "\n".join(out)).replace("/*ANIM*/{}", json.dumps({k: v["steps"] for k, v in ANIM.items()}, ensure_ascii=False))
-(ROOT / "topic-graph/deck.html").write_text(page, encoding="utf-8")
+(ROOT / OUTNAME).write_text(page, encoding="utf-8")
 print(f"✅ topic-graph/deck.html：{len(slides)} 頁；動畫 DFS {len(D)} 步、BFS {len(B)} 步（順序已與講義比對）")
