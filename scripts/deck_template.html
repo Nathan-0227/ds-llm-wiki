@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graph 與 BFS/DFS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a patient teacher at the whiteboard
+   IDEA: a metro diagram — vertices are stations, edges are lines, a traversal is a train run
+   PICTURE: the lecture's graph G drawn as a metro map that lights up station by station
+   COLOUR and TYPE: white / night #0e1116, ink, red #e6261f (DFS), blue #0a5cff (BFS), amber #ffb400 (warnings), green #00a05a; Figtree 800 + Noto Sans TC
+   LAYOUT: fixed 16:9 stage scaled to the window; title band, content, footer with wiki links */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0e1116);--ink:light-dark(#111,#e9edf2);--mute:light-dark(#5b6470,#9aa5b1);--line:light-dark(#e3e6ea,#262c35);--panel:light-dark(#f4f6f8,#161b22);--red:#e6261f;--blue:#0a5cff;--amber:#ffb400;--green:#00a05a;--node:light-dark(#fff,#0e1116)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;background:light-dark(#e9ecef,#05070a);overflow:hidden}
+body{font:24px/1.5 "Noto Sans TC",Figtree,system-ui,sans-serif;color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;background:var(--bg);box-shadow:0 10px 40px rgb(0 0 0/.18)}
+.slide{position:absolute;inset:0;padding:48px 64px 70px;display:none;flex-direction:column}
+.slide.on{display:flex}
+h2{font:800 42px/1.1 Figtree,"Noto Sans TC",sans-serif;margin:0 0 22px;padding-bottom:14px;border-bottom:6px solid var(--ink);text-wrap:balance}
+h4{font:800 18px/1.2 Figtree,"Noto Sans TC",sans-serif;margin:0 0 8px;color:var(--mute)}
+.body{display:grid;gap:40px;flex:1;align-items:start}.body.two{grid-template-columns:1.25fr 1fr}
+ul.pts{margin:0;padding:0;list-style:none}
+ul.pts li{position:relative;padding:0 0 14px 34px;font-size:24px}
+ul.pts li::before{content:"";position:absolute;left:4px;top:11px;width:14px;height:14px;border-radius:50%;border:4px solid var(--red);background:var(--node)}
+ul.pts li.warn::before{border-color:var(--amber)}
+a.cite{display:inline-block;font:600 14px/1 Figtree,sans-serif;padding:4px 8px;border-radius:999px;background:var(--blue);color:#fff;text-decoration:none;white-space:nowrap;vertical-align:3px}
+footer{position:absolute;left:64px;right:150px;bottom:22px;display:flex;justify-content:space-between;font-size:15px;color:var(--mute);border-top:1px solid var(--line);padding-top:10px}
+footer a{color:var(--red);font-weight:700}
+.cap{font-size:15px;color:var(--mute);margin:6px 0 0;text-align:center}
+svg.g line{stroke:var(--ink);stroke-width:7;stroke-linecap:round}
+svg.g circle{fill:var(--node);stroke:var(--ink);stroke-width:6}
+svg.g text{font:800 20px Figtree,sans-serif;text-anchor:middle;fill:var(--ink)}
+svg.g .seen circle{fill:var(--c,var(--red));stroke:var(--c,var(--red))}svg.g .seen text{fill:#fff}
+svg.g .cur circle{stroke:var(--amber);stroke-width:9}
+svg.g line.used{stroke:var(--c,var(--red));stroke-width:11}
+.cover{margin:auto 0;max-width:1120px}
+.cover h1{font:900 84px/1.02 Figtree,"Noto Sans TC",sans-serif;margin:24px 0}
+.cover p{font-size:26px;margin:6px 0;color:var(--mute)}.cover .hint{font-size:18px;margin-top:30px}
+.cover .lines{display:flex;gap:10px}.cover .lines i{height:12px;width:120px;border-radius:6px;background:var(--red)}.cover .lines i:nth-child(2){background:var(--blue)}.cover .lines i:nth-child(3){background:var(--green)}
+.rep{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+table.mat{border-collapse:collapse;font:700 20px Figtree}table.mat td,table.mat th{width:38px;height:38px;text-align:center;border:1px solid var(--line)}
+table.mat td.one{background:var(--blue);color:#fff}table.mat td.zero{color:var(--mute)}
+.lst .row{display:flex;gap:6px;margin-bottom:8px;font:700 20px Figtree}.lst b{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:4px solid var(--ink)}
+.lst span{padding:2px 12px;border-radius:6px;background:var(--panel);border:2px solid var(--blue)}
+.sq{display:grid;gap:26px}.sq p{font-size:16px;color:var(--mute);margin:6px 0 0}
+.stack{display:flex;flex-direction:column;width:110px;gap:4px}.stack span,.queue span{font:800 22px Figtree;padding:6px;text-align:center;border-radius:6px;background:var(--red);color:#fff}
+.queue{display:flex;gap:6px;align-items:center}.queue span{width:56px;background:var(--blue)}.queue em{font-size:14px;color:var(--mute)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cmp div{padding:18px;border-radius:12px;color:#fff}.cmp .dfs{background:var(--red)}.cmp .bfs{background:var(--blue)}
+.cmp h4{color:#fff;font-size:30px}.cmp p{margin:4px 0;font-size:22px}
+.animwrap{display:grid;grid-template-columns:430px 1fr;gap:36px;flex:1}
+.animwrap[data-anim=bfs]{--c:var(--blue)}
+svg.big{width:430px;height:318px}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{font:700 17px "Noto Sans TC",Figtree,sans-serif;min-height:44px;padding:8px 14px;border-radius:999px;border:3px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer}
+button.pri{background:var(--ink);color:var(--bg)}button:focus-visible{outline:4px solid var(--amber);outline-offset:2px}
+.act{font-weight:700;font-size:22px;min-height:66px;margin:0 0 8px;padding:10px 14px;border-left:8px solid var(--amber);background:var(--panel);border-radius:0 8px 8px 0}
+.ds,.seen{margin-bottom:12px}.cells{display:flex;gap:6px;min-height:42px;align-items:center}
+.cells span{font:800 19px Figtree;padding:6px 12px;border-radius:6px;background:var(--c,var(--red));color:#fff}.cells em{color:var(--mute);font-size:16px}
+.seen .cells span{background:var(--node);color:var(--ink);border:3px solid var(--c,var(--red))}
+.animwrap ul.pts li{font-size:18px;padding-bottom:6px}
+details summary{cursor:pointer;font-size:16px;color:var(--mute)}details pre{font-size:13px;line-height:1.35;background:var(--panel);padding:10px;border-radius:8px;position:absolute;right:64px;bottom:70px;width:560px;box-shadow:0 8px 30px rgb(0 0 0/.25);margin:0}
+ol.quiz{font-size:24px;padding-left:28px}ol.quiz li{margin-bottom:18px}ol.quiz .reveal{margin-left:12px;min-height:36px;padding:4px 12px;font-size:15px}.ans{display:inline-block;margin-left:10px;color:var(--green);font-weight:700}
+.map table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.3}.map th,.map td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left}.map th{border-bottom:3px solid var(--ink);font-family:Figtree}.map a{color:var(--red);font-weight:700}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:5}#nav button{background:var(--bg)}
+@media (prefers-reduced-motion:no-preference){svg.g circle,svg.g line{transition:fill .25s,stroke .25s,stroke-width .25s}}
+</style></head><body>
+<div id="stage">
+<!--SLIDES-->
+</div>
+<div id="nav"><button id="pv" aria-label="上一頁">←</button><button id="nx" aria-label="下一頁">→</button></div>
+<script>
+{
+const STEPS=/*ANIM*/{};
+const stage=document.getElementById('stage');const slides=[...document.querySelectorAll('.slide')];let cur=0;
+function fit(){const s=Math.min(innerWidth/1280,(innerHeight)/720);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+function go(i){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===cur));if(location.hash!=='#s'+(cur+1))history.replaceState(null,'','#s'+(cur+1))}
+addEventListener('resize',fit);fit();
+const h=parseInt((location.hash.match(/^#s(\d+)$/)||[])[1]||'1',10);go(h-1);
+addEventListener('hashchange',()=>{const m=location.hash.match(/^#s(\d+)$/);if(m)go(+m[1]-1)});
+addEventListener('keydown',e=>{if(e.target.closest('button,summary'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}});
+document.getElementById('nx').onclick=()=>go(cur+1);document.getElementById('pv').onclick=()=>go(cur-1);
+for(const b of document.querySelectorAll('.reveal'))b.onclick=()=>{const a=b.nextElementSibling;a.hidden=!a.hidden;b.setAttribute('aria-expanded',String(!a.hidden));b.textContent=a.hidden?'看答案':'收起'};
+for(const w of document.querySelectorAll('.animwrap')){
+  const steps=STEPS[w.dataset.anim];let i=0,timer=null;
+  const svg=w.querySelector('svg'),act=w.querySelector('.act'),ds=w.querySelector('.ds .cells'),seen=w.querySelector('.seen .cells'),play=w.querySelector('[data-do=play]');
+  const draw=()=>{const st=steps[i];
+    act.textContent=`第 ${i+1} / ${steps.length} 步：${st.act}`;
+    ds.innerHTML=st.ds.length?st.ds.map(x=>`<span>${x}</span>`).join(''):'<em>empty</em>';
+    seen.innerHTML=st.seen.map(x=>`<span>${x}</span>`).join('');
+    for(const g of svg.querySelectorAll('[data-n]')){g.classList.toggle('seen',st.seen.includes(g.dataset.n));g.classList.toggle('cur',g.dataset.n===st.cur)}
+    const used=new Set();for(const s of steps.slice(0,i+1))if(s.edge)used.add(s.edge.slice().sort().join('-'));
+    for(const l of svg.querySelectorAll('[data-e]'))l.classList.toggle('used',used.has(l.dataset.e.split('-').sort().join('-')));
+    w.dataset.step=i};
+  const stop=()=>{clearInterval(timer);timer=null;play.textContent='自動播放'};
+  w.querySelector('[data-do=next]').onclick=()=>{stop();if(i<steps.length-1)i++;draw()};
+  w.querySelector('[data-do=prev]').onclick=()=>{stop();if(i>0)i--;draw()};
+  w.querySelector('[data-do=reset]').onclick=()=>{stop();i=0;draw()};
+  play.onclick=()=>{if(timer)return stop();if(i>=steps.length-1)i=0;play.textContent='暫停';timer=setInterval(()=>{if(i<steps.length-1){i++;draw()}else stop()},1100)};
+  draw();
+}
+}
+</script></body></html>

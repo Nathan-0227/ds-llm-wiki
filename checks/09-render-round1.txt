@@ -1,0 +1,5 @@
+✅ 第 7 頁 DFS 動畫最後畫面：v3v2v1v4v5（講義 v3v2v1v4v5）
+✅ 第 9 頁 BFS 動畫最後畫面：v5v3v4v2v1（講義 v5v3v4v2v1）
+截圖 15 頁 → checks/render/
+❌ 1 個問題
+第 15 頁內容超出／壓到 footer：['TABLE:頁投影片Wiki 頁講義頁碼2今天要學會']

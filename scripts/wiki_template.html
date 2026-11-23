@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>資料結構 LLM Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm reference manual for a course
+   IDEA: a metro map — pages are stations, [[links]] are lines between them
+   PICTURE: line-coloured station list in the sidebar, coloured chips for citations
+   COLOUR and TYPE: white / night #0e1116, ink black, red #e6261f, blue #0a5cff, amber #ffb400, green #00a05a; Figtree 800 + Noto Sans TC
+   LAYOUT: sticky station list left, reading column right; stacks under 760px */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0e1116);--ink:light-dark(#111,#e9edf2);--mute:light-dark(#5b6470,#9aa5b1);--line:light-dark(#e3e6ea,#262c35);--panel:light-dark(#f6f7f9,#151a21);--red:#e6261f;--blue:#0a5cff;--amber:#ffb400;--green:#00a05a}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Noto Sans TC","Figtree",system-ui,sans-serif;overflow-x:clip}
+header{display:flex;gap:16px;align-items:center;padding:14px max(4vw,16px);border-bottom:4px solid var(--ink);flex-wrap:wrap}
+header h1{font:800 22px/1.1 Figtree,"Noto Sans TC",sans-serif;margin:0}
+header p{margin:0;color:var(--mute);font-size:14px}
+#q{margin-left:auto;font:16px inherit;padding:8px 12px;border:2px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);width:min(260px,100%)}
+#q:focus-visible{outline:3px solid var(--blue)}
+.wrap{display:grid;grid-template-columns:280px minmax(0,1fr);max-width:1240px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:18px 16px 40px;border-right:1px solid var(--line)}
+nav h2{font:800 13px/1 Figtree,sans-serif;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+nav h2::before{content:"";width:22px;height:6px;border-radius:3px;background:var(--c)}
+nav a{display:flex;gap:10px;align-items:flex-start;padding:5px 6px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:14px;line-height:1.35}
+nav a::before{content:"";flex:none;width:11px;height:11px;margin-top:3px;border-radius:50%;border:3px solid var(--c);background:var(--bg)}
+nav a.on{background:var(--panel);font-weight:700}
+nav a:hover{background:var(--panel)}
+main{padding:24px max(4vw,16px) 80px}
+article{max-width:760px}
+article h1{font:800 clamp(28px,4vw,40px)/1.1 Figtree,"Noto Sans TC",sans-serif;margin:.2em 0 .6em;text-wrap:balance}
+article h2{font:800 22px/1.2 Figtree,"Noto Sans TC",sans-serif;margin:1.6em 0 .4em}
+.path{font-size:13px;color:var(--mute)}
+a.cite{display:inline-block;font:600 12px/1 Figtree,sans-serif;padding:3px 7px;border-radius:999px;background:var(--blue);color:#fff;text-decoration:none;white-space:nowrap;vertical-align:1px}
+a.wl{color:var(--red);font-weight:700;text-decoration:none;border-bottom:2px solid currentColor}
+blockquote{margin:1em 0;padding:10px 14px;border-left:6px solid var(--amber);background:var(--panel);border-radius:0 8px 8px 0}
+blockquote p{margin:0}
+pre{background:var(--panel);padding:14px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5}
+code{overflow-wrap:anywhere}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:Figtree,"Noto Sans TC",sans-serif;border-bottom:2px solid var(--ink)}
+.empty{color:var(--mute)}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}nav{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);columns:2;column-gap:12px}nav h2{break-after:avoid}table{font-size:13px}}
+</style></head><body>
+<header><h1>資料結構 LLM Wiki</h1><p>CSE 215 講義 12 份 · Karpathy LLM Wiki 做法 · 每句標講義頁碼</p><input id="q" type="search" placeholder="搜尋頁面…" aria-label="搜尋頁面"></header>
+<div class="wrap"><nav id="nav" aria-label="頁面"></nav><main><article id="art"></article></main></div>
+<script>
+{
+const PAGES=/*PAGES*/[];
+const COL={"首頁":"var(--ink)","概念頁":"var(--red)","來源頁":"var(--blue)","原始講義文字":"var(--green)","過程紀錄":"var(--amber)"};
+const byId=Object.fromEntries(PAGES.map(p=>[p.id,p]));
+const nav=document.getElementById('nav'),art=document.getElementById('art'),q=document.getElementById('q');
+function drawNav(f=''){const groups={};for(const p of PAGES){if(f&&!(p.title+p.id).toLowerCase().includes(f))continue;(groups[p.group]??=[]).push(p)}
+ nav.innerHTML=Object.entries(groups).map(([g,ps])=>`<h2 style="--c:${COL[g]}">${g}</h2>`+ps.map(p=>`<a href="#${p.id}" data-id="${p.id}" style="--c:${COL[g]}">${p.title}</a>`).join('')).join('')||'<p class="empty">沒有符合的頁面</p>';mark()}
+function mark(){const id=location.hash.slice(1)||'index';for(const a of nav.querySelectorAll('a'))a.classList.toggle('on',a.dataset.id===id)}
+function show(){const id=location.hash.slice(1)||'index';const p=byId[id]||byId.index;art.innerHTML=`<p class="path">${p.path}</p>`+p.html;mark();window.scrollTo(0,0)}
+q.addEventListener('input',()=>drawNav(q.value.trim().toLowerCase()));
+addEventListener('hashchange',show);drawNav();show();
+}
+</script></body></html>
