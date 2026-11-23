@@ -42,14 +42,15 @@ cards: dfs
 講義用「拿粉筆和一條線探索迷宮」說明 DFS [G1 p.26] {dfs}
 每個地點三種狀態：還沒去過、去過但出口沒探完、出口都探完 [G1 p.26] {dfs}
 先盡量往深處走（go as deep as we can），過程中建出一棵 DFS tree [G1 p.54] {dfs}
-DFS 會找到從起點能到達的所有 nodes（connected component）[G1 p.52] {dfs}
+DFS 會找到起點能到達的所有 nodes；在無向圖中叫 connected component [G1 p.52] {dfs}
+一次走不完整張圖時就重複做；有向圖也能用 [G1 p.53][G1 p.57] {dfs}
 
 ## 動手看：DFS 一步一步
 cards: dfs-nonrecursive, example-graph-g
 anim: dfs
 看 stack 頂端：還有沒拜訪的鄰居就 push，沒有就 pop（backtrack）[G2 p.3] {dfs-nonrecursive}
 圖 G 從 v3 開始，拜訪順序：v3, v2, v1, v4, v5 [G2 p.4] {dfs-nonrecursive}
-講義沒說多個鄰居時先選誰；動畫用「編號小的先」，與講義順序一致 [G2 p.3][G2 p.4] {example-graph-g}
+講義沒說多個鄰居時先選誰；動畫採「編號小的先」，邊是看講義圖讀出的 [G2 p.3][G2 p.2] {example-graph-g}
 
 ## BFS 的直覺：從天上鳥瞰
 cards: bfs
@@ -63,6 +64,7 @@ cards: bfs-queue, example-graph-g
 anim: bfs
 先拜訪自己，再拜訪所有鄰居，再拜訪鄰居的鄰居 [G2 p.5] {bfs-queue}
 dequeue 一個 node，把它沒拜訪過的鄰居 enqueue [G2 p.6] {bfs-queue}
+同一個 BFS 的兩種寫法：G1 用分層串列 Li，G2 用一個 queue [G1 p.86][G2 p.6] {bfs-queue}
 圖 G 從 v5 開始，拜訪順序：v5, v3, v4, v2, v1 [G2 p.7] {bfs-queue}
 
 ## DFS vs BFS
@@ -77,24 +79,24 @@ BFS 的策略和 level-order 相似 [G2 p.5] {tree-traversal}
 ## 跑多快？執行時間
 cards: big-o, graph-representation, dfs
 f(n) 是 O(g(n))：n 夠大之後，f(n) 不超過 g(n) 的常數倍 [C1 p.28] {big-o}
-DFS、BFS 都是 O(n + m)，n 是 vertices 數、m 是 edges 數 [G1 p.56][G1 p.88] {big-o}
+DFS、BFS 都是 O(n + m) [G1 p.56][G1 p.88] {big-o}
 原因：每條 edge 最多看兩次、每個 vertex 最多拜訪一次 [G1 p.55] {dfs}
-用 adjacency list 時，每個 vertex 只要檢查自己的 neighbors [G1 p.56] {graph-representation}
+每個 vertex：O(1) bookkeeping＋O(deg(w)) 檢查 neighbors [G1 p.56] {dfs}
 
 ## DFS 與 BFS 能做什麼
 cards: dfs-applications, bfs-applications
-DFS → topological sorting：照 finish time 的反序排，就不會違反相依 [G1 p.67] {dfs-applications}
-例：安裝套件順序 dpkg、coreutils、tar、libbz2… [G1 p.68] {dfs-applications}
-BFS → shortest path：在 Li 裡的 v，與起點的距離就是 i [G1 p.94] {bfs-applications}
+DFS → topological sorting：相依圖必須是 DAG（沒有 cycle）[G1 p.59] {dfs-applications}
+若有邊 A → B，DFS 中 B 會先 finish；照 finish time 反序排即可 [G1 p.66][G1 p.67] {dfs-applications}
+BFS → shortest path：distance 是最短路徑的邊數；在 Li 裡的 v，距離就是 i [G1 p.94] {bfs-applications}
 BFS → bipartite：BFS tree 各層交替塗兩色，相鄰同色就不是 bipartite [G1 p.103] {bfs-applications}
-兩者時間都是 O(n + m) [G1 p.117] {bfs-applications}
+BFS 檢測 bipartite 的時間是 O(n + m) [G1 p.117] {bfs-applications}
 
 ## 讀講義時要注意的地方
 cards: bfs-applications, tree-traversal, dfs-nonrecursive
 ⚠ 同一頁同時出現 O(n+m) 與「time O(m)」[G1 p.95] {bfs-applications}
 ⚠ 非遞迴 inorder：註解寫 leftChild，程式碼卻寫 rightChild [C5 p.21] {tree-traversal}
 DFS 有兩種寫法：G1 遞迴且記錄時間、G2 用 stack [G1 p.43][G2 p.3] {dfs-nonrecursive}
-Wiki 不替講義改，只並列標註，讓讀者自己對照原文 {tree-traversal}
+本 wiki 不替講義改 {tree-traversal}
 
 ## 回顧＋小測驗
 cards: example-graph-g, stack-and-queue, big-o
